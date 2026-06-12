@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('job_description', jd);
 
     try {
-      const response = await fetch('http://localhost:8000/analyze', {
+      const response = await fetch('https://ai-career-copilot-zy8d.onrender.com/analyze', {
         method: 'POST',
         body: formData,
       });
