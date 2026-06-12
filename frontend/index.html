@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Career Copilot – ATS Resume Analyzer</title>
+  <meta name="description" content="Analyze your resume against any job description with our AI-powered ATS score breakdown, skill gap analysis, and personalized learning roadmap.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- html2pdf for PDF download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+    <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    <span id="theme-label">Light</span>
+  </button>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-top">
+        <div class="header-badge">✦ AI-Powered</div>
+      </div>
+      <h1 id="app-title">AI Career Copilot</h1>
+      <p class="app-subtitle">Instantly score your resume against any job description with deep ATS analysis</p>
+    </header>
+
+    <main class="app-main">
+      <div class="card-grid">
+        <!-- Input Card -->
+        <section class="card input-card">
+          <h2>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            Analysis Inputs
+          </h2>
+          <form id="analyze-form">
+            <div class="form-group">
+              <label for="resume-input">Upload Resume <span class="label-badge">PDF only</span></label>
+              <div class="file-upload-wrapper" id="file-upload-wrapper">
+                <input type="file" id="resume-input" accept=".pdf" required>
+                <div class="file-upload-design">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path></svg>
+                  <span id="file-upload-text">Drop your PDF here or click to browse</span>
+                  <span class="file-upload-hint">Maximum 10MB</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="jd-input">Job Description</label>
+              <textarea id="jd-input" placeholder="Paste the full job description here — requirements, responsibilities, and qualifications..." rows="9" required></textarea>
+            </div>
+
+            <button type="submit" id="analyze-btn">
+              <span class="btn-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </span>
+              <span class="btn-text">Analyze Resume</span>
+              <span class="btn-spinner hidden"></span>
+            </button>
+          </form>
+
+          <!-- Loading State Overlay -->
+          <div class="loading-overlay hidden" id="loading-overlay">
+            <div class="loading-card">
+              <div class="loading-animation">
+                <div class="loading-ring"></div>
+                <div class="loading-ring-inner"></div>
+              </div>
+              <p class="loading-title">Analyzing your resume…</p>
+              <div class="loading-steps">
+                <div class="loading-step active" id="step-1">
+                  <span class="step-dot"></span>Parsing PDF content
+                </div>
+                <div class="loading-step" id="step-2">
+                  <span class="step-dot"></span>Matching against job description
+                </div>
+                <div class="loading-step" id="step-3">
+                  <span class="step-dot"></span>Generating ATS score breakdown
+                </div>
+                <div class="loading-step" id="step-4">
+                  <span class="step-dot"></span>Building personalized roadmap
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Results Card -->
+        <section class="card results-card hidden" id="results-section">
+          <div class="results-header">
+            <h2>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              Analysis Results
+            </h2>
+            <button class="download-btn" id="download-pdf-btn" title="Download report as PDF">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Download PDF
+            </button>
+          </div>
+
+          <div id="printable-report">
+            <!-- ATS Score Overview -->
+            <div class="ats-score-section">
+              <!-- Overall Score Circle -->
+              <div class="overall-score-wrapper">
+                <div class="score-circle-container">
+                  <svg class="score-ring" viewBox="0 0 120 120" width="120" height="120">
+                    <circle class="score-ring-bg" cx="60" cy="60" r="50" />
+                    <circle class="score-ring-fill" id="score-ring-fill" cx="60" cy="60" r="50" />
+                  </svg>
+                  <div class="score-circle-content">
+                    <span id="score-value">0</span><span class="score-percent">%</span>
+                  </div>
+                </div>
+                <div class="score-label">Overall ATS Score</div>
+                <div class="score-badge" id="score-badge">–</div>
+              </div>
+
+              <!-- Breakdown Bars -->
+              <div class="ats-breakdown-grid">
+                <div class="breakdown-item">
+                  <div class="breakdown-header">
+                    <span class="breakdown-label">
+                      <span class="breakdown-icon skills-icon">⚡</span>Skills Match
+                    </span>
+                    <span class="breakdown-value" id="skills-match-value">–</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill skills-bar" id="skills-match-bar" style="width:0%"></div>
+                  </div>
+                </div>
+
+                <div class="breakdown-item">
+                  <div class="breakdown-header">
+                    <span class="breakdown-label">
+                      <span class="breakdown-icon projects-icon">🏗</span>Projects Match
+                    </span>
+                    <span class="breakdown-value" id="projects-match-value">–</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill projects-bar" id="projects-match-bar" style="width:0%"></div>
+                  </div>
+                </div>
+
+                <div class="breakdown-item">
+                  <div class="breakdown-header">
+                    <span class="breakdown-label">
+                      <span class="breakdown-icon education-icon">🎓</span>Education Match
+                    </span>
+                    <span class="breakdown-value" id="education-match-value">–</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill education-bar" id="education-match-bar" style="width:0%"></div>
+                  </div>
+                </div>
+
+                <div class="breakdown-item">
+                  <div class="breakdown-header">
+                    <span class="breakdown-label">
+                      <span class="breakdown-icon keyword-icon">🔑</span>Keyword Match
+                    </span>
+                    <span class="breakdown-value" id="keyword-match-value">–</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill keyword-bar" id="keyword-match-bar" style="width:0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="result-details">
+              <!-- Matching Skills -->
+              <div class="detail-group">
+                <h3>
+                  <span class="section-icon success-icon">✓</span>
+                  Matching Skills
+                </h3>
+                <div id="matching-skills-tags" class="tags-container"></div>
+                <p id="no-matching-skills" class="empty-state hidden">No matching skills detected. Highlight core competencies in your resume.</p>
+              </div>
+
+              <!-- Missing Skills -->
+              <div class="detail-group">
+                <h3>
+                  <span class="section-icon danger-icon">✗</span>
+                  Missing Skills
+                </h3>
+                <div id="missing-skills-tags" class="tags-container"></div>
+                <p id="no-missing-skills" class="empty-state hidden">No missing skills detected! Your resume aligns well with the required skills.</p>
+              </div>
+
+              <!-- Suggestions -->
+              <div class="detail-group">
+                <h3>
+                  <span class="section-icon warning-icon">💡</span>
+                  Actionable Suggestions
+                </h3>
+                <ul id="suggestions-list" class="suggestions-list"></ul>
+              </div>
+
+              <!-- Interview Questions -->
+              <div class="detail-group">
+                <h3>
+                  <span class="section-icon primary-icon">🎯</span>
+                  Suggested Interview Prep Questions
+                </h3>
+                <ul id="interview-questions-list" class="suggestions-list interview-list"></ul>
+              </div>
+
+              <!-- Learning Roadmap -->
+              <div class="detail-group">
+                <h3>
+                  <span class="section-icon primary-icon">🗺</span>
+                  Personalized Learning Roadmap
+                </h3>
+                <div id="roadmap-container" class="roadmap-timeline"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>© 2026 AI Career Copilot · Powered by LLaMA &amp; Gemini</p>
+    </footer>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
