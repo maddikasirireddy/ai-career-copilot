@@ -83,10 +83,23 @@ Only list matching or missing skills explicitly stated in the job description.
     knowledge of every HTTP method. Require
     supporting evidence.
 
-12. For education matching, recognize equivalent
-    qualifications such as B.Tech, B.E., and
-    Bachelor of Technology. A degree in progress
-    satisfies "currently pursuing" requirements.
+12. 12. EDUCATION MATCHING:
+    - Read the education section of the resume carefully.
+    - B.Tech, B.E., Bachelor of Technology, and
+      Bachelor of Engineering are equivalent degree levels.
+    - Recognize Computer Science, CSE, and Computer
+      Science and Engineering as equivalent fields.
+    - If the job accepts students currently pursuing
+      a Bachelor's degree, an ongoing B.Tech qualifies.
+    - If the resume clearly satisfies all stated
+      education requirements, set education_match to 100.
+    - If education requirements are partially satisfied,
+      give a score reflecting only the stated requirements.
+    - If the resume does not satisfy the requirements,
+      set education_match to 0.
+    - If the job description does not specify education
+      requirements, use 100 as a neutral score.
+    - Never invent educational qualifications.
 
 13. Use a consistent scoring rubric:
     - skills_match: percentage of explicitly required
