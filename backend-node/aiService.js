@@ -143,7 +143,7 @@ ${jobDescription.replace(/\s+/g, " ").slice(0, 1500)}
       { role: "user", content: prompt }
     ],
     response_format: { type: "json_object" },
-    temperature: 0.2,
+    temperature: 0,
     max_tokens: 1800
   });
 
