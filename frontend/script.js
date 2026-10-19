@@ -149,14 +149,16 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('job_description', jd);
 
     try {
-      const response = await fetch('https://ai-career-copilot-zy8d.onrender.com/analyze', {
+      const response = await fetch('http://localhost:5000/analyze', {
         method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.detail || 'An error occurred while analyzing the resume.');
+        throw new Error(
+  errData.error || errData.detail || 'An error occurred while analyzing the resume.'
+);
       }
 
       const data = await response.json();

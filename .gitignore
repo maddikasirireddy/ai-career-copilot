@@ -1,7 +1,21 @@
-venv/
-node_modules/
+
+# Environment variables and secrets
 .env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+backend/venv/
+backend/.venv/
+
+# Python
 __pycache__/
 *.pyc
-.DS_Store
 
+# Build files
+dist/
+build/
+
+# System files
+.DS_Store
